@@ -1,4 +1,4 @@
-package com.example.demo.request;
+package com.example.demo.dto.auth.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

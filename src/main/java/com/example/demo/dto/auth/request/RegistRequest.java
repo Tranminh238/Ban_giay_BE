@@ -1,4 +1,4 @@
-package com.example.demo.request;
+package com.example.demo.dto.auth.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -16,6 +16,12 @@ public class RegistRequest {
 
     @NotBlank
     private String password;
+
+    @NotBlank
+    private String confirmPassword;
+
+    @NotBlank
+    private String email;
 
     @NotBlank
     private String fullName;

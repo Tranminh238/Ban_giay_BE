@@ -1,4 +1,4 @@
-package com.example.demo.response;
+package com.example.demo.dto.auth.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
     private String token;
     private String role;
+    private Long userId;
 }
