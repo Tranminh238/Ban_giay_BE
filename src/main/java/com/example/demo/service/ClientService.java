@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.auth.request.RegistRequest;
+import com.example.demo.dto.client.request.ClientEdditInfoRequest;
+import com.example.demo.dto.client.response.ClientInfoResponse;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.User;
 import com.example.demo.exception.Exception;
@@ -37,4 +39,37 @@ public class ClientService {
                 .build();
         clientRepository.save(client);
     }
+    public String editFrofile(ClientEdditInfoRequest request){
+        Client client = clientRepository.findById(request.getUserId())
+                .orElseThrow(() -> new Exception("Client not found by id: " + request.getUserId()));
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new Exception("User not found by id: " + request.getUserId()));
+
+        user.setUsername(request.getEmail());
+        client.setFullName(request.getFullName());
+        client.setPhoneNumber(request.getPhoneNumber());
+        client.setAddress(request.getAddress());
+        client.setPhoneNumber(request.getPhoneNumber());
+
+        userRepository.save(user);
+        clientRepository.save(client);
+    }
+
+    public ClientInfoResponse findByUserId(Long userId){
+        Client client = clientRepository.findById(userId)
+                .orElseThrow(() -> new Exception("Client not found by id: " + userId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new Exception("Client not found by id: " + userId));
+
+        ClientInfoResponse response = ClientInfoResponse.builder()
+                .userId(client.getUserId())
+                .email(user.getUsername())
+                .fullName(client.getFullName())
+                .phoneNumber(client.getPhoneNumber())
+                .address(client.getAddress())
+                .build();
+
+        return response;
+    }
+
 }
