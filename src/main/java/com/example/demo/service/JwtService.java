@@ -12,7 +12,7 @@ import java.util.Date;
 @Service
 @Slf4j
 public class JwtService {
-    private final static String SECRET_KEY = "locnd";
+    private final static String SECRET_KEY = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437767A244226452948404D635166546A576E5A7234753778214125442A472D4B6150";
     private final static int JWT_EXP = 86400;
 
     public String createToken(Authentication authentication) {

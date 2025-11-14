@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Data
 @Entity
-@Table(name = "Product")
+@Table(name = "Orders")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -18,8 +18,8 @@ public class Oder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    private Long productid;
-    private Long clientid;
+    private Long productId;
+    private Long clientId;
     private LocalTime order_date;
     private String status;
     private String deliveryAddress;
