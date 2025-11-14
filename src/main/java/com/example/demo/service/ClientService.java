@@ -39,7 +39,7 @@ public class ClientService {
                 .build();
         clientRepository.save(client);
     }
-    public String editFrofile(ClientEdditInfoRequest request){
+    public void editInfo(ClientEdditInfoRequest request){
         Client client = clientRepository.findById(request.getUserId())
                 .orElseThrow(() -> new Exception("Client not found by id: " + request.getUserId()));
         User user = userRepository.findById(request.getUserId())
@@ -53,23 +53,6 @@ public class ClientService {
 
         userRepository.save(user);
         clientRepository.save(client);
-    }
-
-    public ClientInfoResponse findByUserId(Long userId){
-        Client client = clientRepository.findById(userId)
-                .orElseThrow(() -> new Exception("Client not found by id: " + userId));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new Exception("Client not found by id: " + userId));
-
-        ClientInfoResponse response = ClientInfoResponse.builder()
-                .userId(client.getUserId())
-                .email(user.getUsername())
-                .fullName(client.getFullName())
-                .phoneNumber(client.getPhoneNumber())
-                .address(client.getAddress())
-                .build();
-
-        return response;
     }
 
 }
