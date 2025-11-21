@@ -13,11 +13,9 @@ public class ProductCreateForm {
     @NotNull
     private String name;
     @NotNull
-    private int price;
+    private Integer price;
     @NotNull
-    private int stock;
-    @NotNull
-    private int discount;
+    private Integer discount;
     @NotNull
     private String brand;
     @NotNull

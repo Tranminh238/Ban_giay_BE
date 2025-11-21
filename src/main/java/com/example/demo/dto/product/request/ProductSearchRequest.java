@@ -13,10 +13,17 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductSearchRequest {
     private String name;
-    private int price;
-    private int stock;
-    private int sold;
-    private int discount;
+    private Integer price;
+    private Integer sold;
+    private Integer discount;
     private String brand;
-    private List<Integer> categoryId;
+    private Long categoryId;
+    private Double minPrice;
+    private Double maxPrice;
+
+    private Integer page = 0;
+    private Integer size = 10;
+    private List<Integer> brandlist;
+    private String sortBy = "createdAt";
+    private String sortDirection = "DESC";
 }

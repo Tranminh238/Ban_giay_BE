@@ -20,13 +20,12 @@ public class Product {
     @Column(nullable = false)
     private Long id;
     private String name;
-    private int price;
-    private int stock;
-    private int sold;
-    private int discount;
+    private Integer price;
+    private Integer sold;
+    private Integer discount;
     private String brand;
     private String description;
-    private int status;
+    private Integer status;
     private Long categoryId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

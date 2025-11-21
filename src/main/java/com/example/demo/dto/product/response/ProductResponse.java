@@ -15,21 +15,23 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse {
+    private Long productId;
     private String name;
-
-    private int price;
-
-    private int stock;
-
-    private int sold;
-
-    private int discount;
-
+    private Integer price;
+    private Integer sold;
+    private Integer discount;
     private String brand;
-
-    private String imageUrl;
-
     private String description;
+    private LocalDateTime createdAt;
+
+    private Integer finalPrice; // price after discount
+
+    public Integer getFinalPrice() {
+        if (price != null && discount != null) {
+            return price - (price * discount / 100);
+        }
+        return price;
+    }
 }
 
 
