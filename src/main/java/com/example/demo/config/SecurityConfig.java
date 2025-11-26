@@ -84,10 +84,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Cho phép truy cập không cần authentication
                         .requestMatchers(
-                                "/auth/login",          // Endpoint đăng nhập
-                                "/auth/register",       // Endpoint đăng ký (nếu có)
-                                "/client/register",     // Endpoint đăng ký client
-                                "/api/public/**"        // Tất cả endpoint public
+                                "/auth/login",
+                                "/auth/register",
+                                "/client/register",
+                                "/product/create-product",
+                                "/product/update-product",
+                                "/api/public/**"
+
+
                         ).permitAll()
 
                         // Tất cả các request còn lại cần authentication

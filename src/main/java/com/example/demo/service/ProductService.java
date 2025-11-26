@@ -25,14 +25,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CustomerProductRepository customerProductRepository;
 
-    /**
-     * Tạo sản phẩm mới
-     */
     @Transactional
     public BaseResponse createProduct(ProductCreateForm form) {
         try {
+
             Product product = Product.builder()
-                    .categoryId(form.getCategoryId())
                     .name(form.getName())
                     .price(form.getPrice())
                     .sold(0)
@@ -67,16 +64,15 @@ public class ProductService {
     @Transactional
     public BaseResponse updateProduct(ProductCreateForm form) {
         try {
-            Product product = productRepository.findProductActive(form.getName())
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+            Product product = productRepository.findProductActive(form.getProductId())
+                    .orElseThrow(() -> new Exception("Không tìm thấy sản phẩm"));
 
-            product.setCategoryId(form.getCategoryId());
             product.setName(form.getName());
             product.setPrice(form.getPrice());
             product.setDiscount(form.getDiscount());
             product.setBrand(form.getBrand());
             product.setDescription(form.getDescription());
-//            product.setStatus(form.getStatus());
+            product.setStatus(1);
 
             Product updatedProduct = productRepository.save(product);
 

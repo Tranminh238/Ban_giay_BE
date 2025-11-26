@@ -17,9 +17,9 @@ public class ProductSearchRequest {
     private Integer sold;
     private Integer discount;
     private String brand;
-    private Long categoryId;
     private Double minPrice;
     private Double maxPrice;
+    private Integer status;
 
     private Integer page = 0;
     private Integer size = 10;

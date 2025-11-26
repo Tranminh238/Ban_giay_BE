@@ -24,9 +24,10 @@ public class ProductController {
             return ResponseEntity.ok(new BaseResponse(200, "Success", null));
         }
         catch (Exception e){
-            return  ResponseEntity.ok(new BaseResponse(500, "Success", null));
+            return  ResponseEntity.ok(new BaseResponse(500, "Fail", null));
         }
     }
+
     @PostMapping("update-product")
     public ResponseEntity<BaseResponse> updateProduct(@RequestBody @Valid ProductCreateForm productCreateForm){
         try{
@@ -34,7 +35,8 @@ public class ProductController {
             return ResponseEntity.ok(new BaseResponse(200, "Success", null));
         }
         catch (Exception e){
-            return  ResponseEntity.ok(new BaseResponse(500, "Success", null));
+            return  ResponseEntity.ok(new BaseResponse(500, "Fail", null));
         }
     }
+
 }

@@ -8,8 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 @Data
 public class ProductCreateForm {
-    @NotNull
-    private Long categoryId;
+    private Long productId;
     @NotNull
     private String name;
     @NotNull
@@ -20,8 +19,8 @@ public class ProductCreateForm {
     private String brand;
     @NotNull
     private String description;
-    @NotNull
-    private LocalDateTime createdAt;
-    @NotNull
-    private LocalDateTime updateAt;
+//    @NotNull
+//    private LocalDateTime createdAt;
+//    @NotNull
+//    private LocalDateTime updateAt;
 }

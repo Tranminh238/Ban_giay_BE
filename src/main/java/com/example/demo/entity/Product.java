@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "Product")
+@Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -26,7 +26,6 @@ public class Product {
     private String brand;
     private String description;
     private Integer status;
-    private Long categoryId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

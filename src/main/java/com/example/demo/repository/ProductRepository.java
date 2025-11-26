@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query(value = "select * from Product where p.status = 1 and id = productId",nativeQuery = true)
-    Optional<Product> findProductActive(@Param("productId") String name);
+    @Query("SELECT p FROM Product p WHERE p.status = 1 AND p.id = :productId")
+    Optional<Product> findProductActive(@Param("productId") Long productId);
 }
