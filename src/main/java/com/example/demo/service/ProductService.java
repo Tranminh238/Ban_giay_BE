@@ -26,9 +26,7 @@ public class ProductService {
     private final CustomerProductRepository customerProductRepository;
 
     @Transactional
-    public BaseResponse createProduct(ProductCreateForm form) {
-        try {
-
+    public void createProduct(ProductCreateForm form) {
             Product product = Product.builder()
                     .name(form.getName())
                     .price(form.getPrice())
@@ -39,31 +37,12 @@ public class ProductService {
                     .status(1)
                     .build();
 
-            Product savedProduct = productRepository.save(product);
-
-            ProductResponse response = convertToResponse(savedProduct);
-
-            return new BaseResponse(
-                    HttpStatus.CREATED.value(),
-                    "Tạo sản phẩm thành công",
-                    response
-            );
-        } catch (Exception e) {
-            log.error("Error creating product: {}", e.getMessage());
-            return new BaseResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Lỗi khi tạo sản phẩm: " + e.getMessage(),
-                    null
-            );
-        }
+            productRepository.save(product);
     }
 
-    /**
-     * Cập nhật sản phẩm
-     */
+
     @Transactional
-    public BaseResponse updateProduct(ProductCreateForm form) {
-        try {
+    public void updateProduct(ProductCreateForm form) throws Exception {
             Product product = productRepository.findProductActive(form.getProductId())
                     .orElseThrow(() -> new Exception("Không tìm thấy sản phẩm"));
 
@@ -74,106 +53,18 @@ public class ProductService {
             product.setDescription(form.getDescription());
             product.setStatus(1);
 
-            Product updatedProduct = productRepository.save(product);
-
-            ProductResponse response = convertToResponse(updatedProduct);
-
-            return new BaseResponse(
-                    HttpStatus.OK.value(),
-                    "Cập nhật sản phẩm thành công",
-                    response
-            );
-        } catch (Exception e) {
-            log.error("Error updating product: {}", e.getMessage());
-            return new BaseResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Lỗi khi cập nhật sản phẩm: " + e.getMessage(),
-                    null
-            );
-        }
-    }
-
-    /**
-     * Xóa sản phẩm (soft delete)
-     */
-    @Transactional
-    public BaseResponse deleteProduct(Long id) {
-        try {
-            Product product = productRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
-
-            product.setStatus(0);
             productRepository.save(product);
 
-            return new BaseResponse(
-                    HttpStatus.OK.value(),
-                    "Xóa sản phẩm thành công",
-                    null
-            );
-        } catch (Exception e) {
-            log.error("Error deleting product: {}", e.getMessage());
-            return new BaseResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Lỗi khi xóa sản phẩm: " + e.getMessage(),
-                    null
-            );
-        }
     }
 
-    /**
-     * Lấy chi tiết sản phẩm
-     */
-//    public BaseResponse getProductById(Long id) {
-//        try {
-//            Product product = productRepository.findActiveProductById(id)
-//                    .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
-//
-//            ProductResponse response = convertToResponse(product);
-//
-//            return new BaseResponse(
-//                    HttpStatus.OK.value(),
-//                    "Lấy thông tin sản phẩm thành công",
-//                    response
-//            );
-//        } catch (Exception e) {
-//            log.error("Error getting product: {}", e.getMessage());
-//            return new BaseResponse(
-//                    HttpStatus.NOT_FOUND.value(),
-//                    "Không tìm thấy sản phẩm",
-//                    null
-//            );
-//        }
-//    }
-//
-//    /**
-//     * Lấy tất cả sản phẩm active
-//     */
-//    public BaseResponse getAllActiveProducts() {
-//        try {
-//            List<Product> products = productRepository.findByStatus(1);
-//
-//            List<ProductResponse> responses = products.stream()
-//                    .map(this::convertToResponse)
-//                    .collect(Collectors.toList());
-//
-//            return new BaseResponse(
-//                    HttpStatus.OK.value(),
-//                    "Lấy danh sách sản phẩm thành công",
-//                    responses
-//            );
-//        } catch (Exception e) {
-//            log.error("Error getting all products: {}", e.getMessage());
-//            return new BaseResponse(
-//                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                    "Lỗi khi lấy danh sách sản phẩm",
-//                    null
-//            );
-//        }
-//    }
+    @Transactional
+    public void deleteProduct(Long productId) throws Exception {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new Exception("Không tìm thấy sản phẩm"));
+            product.setStatus(0);
+            productRepository.save(product);
+    }
 
-    /**
-     * Tìm kiếm sản phẩm với pagination
-     */
     public BaseResponse searchProducts(ProductSearchRequest request) {
         try {
             Page<ProductResponse> products = customerProductRepository.getSearchProduct(request);
@@ -192,10 +83,14 @@ public class ProductService {
             );
         }
     }
+    public ProductResponse findProductDetailByProductId(Long productId) throws Exception {
 
-    /**
-     * Convert Entity to Response DTO
-     */
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new Exception("Không tìm thấy sản phẩm" + productId));
+        return convertToResponse(product);
+    }
+
+
     private ProductResponse convertToResponse(Product product) {
         return ProductResponse.builder()
                 .productId(product.getId())

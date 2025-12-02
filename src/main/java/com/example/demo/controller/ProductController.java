@@ -2,14 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.base.BaseResponse;
 import com.example.demo.dto.product.request.ProductCreateForm;
+import com.example.demo.dto.product.request.ProductSearchRequest;
 import com.example.demo.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
@@ -17,18 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping("create-product")
+    @PostMapping("create")
     public ResponseEntity<BaseResponse> createProduct(@RequestBody @Valid ProductCreateForm productCreateForm){
         try{
             productService.createProduct(productCreateForm);
             return ResponseEntity.ok(new BaseResponse(200, "Success", null));
         }
         catch (Exception e){
-            return  ResponseEntity.ok(new BaseResponse(500, "Fail", null));
+            return  ResponseEntity.ok(new BaseResponse(500, "Fail" + e.getMessage(), null));
         }
     }
 
-    @PostMapping("update-product")
+    @PutMapping("update")
     public ResponseEntity<BaseResponse> updateProduct(@RequestBody @Valid ProductCreateForm productCreateForm){
         try{
             productService.updateProduct(productCreateForm);
@@ -38,5 +36,31 @@ public class ProductController {
             return  ResponseEntity.ok(new BaseResponse(500, "Fail", null));
         }
     }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<BaseResponse> deleteProduct(@PathVariable Long id) {
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.ok(new BaseResponse(200, "Xóa sản phẩm thành công", null));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new BaseResponse(500, "Fail: " + e.getMessage(), null));
+        }
+    }
 
+    // ---------------- SEARCH PRODUCT ----------------
+    @PostMapping("/search")
+    public ResponseEntity<BaseResponse> searchProducts(@RequestBody ProductSearchRequest request) {
+        return ResponseEntity.ok(productService.searchProducts(request));
+    }
+
+    // ---------------- GET DETAIL PRODUCT ----------------
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<BaseResponse> getProductDetail(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(
+                    new BaseResponse(200, "Lấy sản phẩm thành công", productService.findProductDetailByProductId(id))
+            );
+        } catch (Exception e) {
+            return ResponseEntity.ok(new BaseResponse(404, "Không tìm thấy: " + e.getMessage(), null));
+        }
+    }
 }

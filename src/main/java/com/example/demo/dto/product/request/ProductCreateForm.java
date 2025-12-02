@@ -17,6 +17,8 @@ public class ProductCreateForm {
     private Integer discount;
     @NotNull
     private String brand;
+
+    private Integer status;
     @NotNull
     private String description;
 //    @NotNull

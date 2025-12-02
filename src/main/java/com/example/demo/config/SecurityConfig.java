@@ -85,10 +85,8 @@ public class SecurityConfig {
                         // Cho phép truy cập không cần authentication
                         .requestMatchers(
                                 "/auth/login",
-                                "/auth/register",
                                 "/client/register",
-                                "/product/create-product",
-                                "/product/update-product",
+                                "/product/**",
                                 "/api/public/**"
 
 
