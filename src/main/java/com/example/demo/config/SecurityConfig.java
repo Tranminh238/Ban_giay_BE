@@ -87,6 +87,7 @@ public class SecurityConfig {
                                 "/auth/login",
                                 "/client/register",
                                 "/product/**",
+                                "order/**",
                                 "/api/public/**"
 
 

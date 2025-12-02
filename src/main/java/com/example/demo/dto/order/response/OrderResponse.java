@@ -1,31 +1,25 @@
-package com.example.demo.entity;
+package com.example.demo.dto.order.response;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Data
-@Entity
-@Table(name = "orders")
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-
-public class Oder {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+public class OrderResponse {
     private Long id;
     private Long productId;
     private Long clientId;
     private Integer quantity;
     private Long price;
-    private String status;
+
     private String consigneeName;
     private String consigneePhoneNumber;
     private String deliveryAddress;
+
+    private String status;
+
     private LocalDateTime createAt;
     private LocalDateTime canceledAt;
     private LocalDateTime completedAt;
