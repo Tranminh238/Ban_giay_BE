@@ -203,6 +203,9 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
                             .sold(rs.getBigDecimal("sold") != null
                                     ? rs.getBigDecimal("sold").intValue()
                                     : null)
+                            .quantity(rs.getBigDecimal("quantity") != null
+                                    ? rs.getBigDecimal("quantity").intValue()
+                                    : null)
                             .discount(rs.getBigDecimal("discount") != null
                                     ? rs.getBigDecimal("discount").intValue()
                                     : null)
@@ -224,7 +227,6 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
         }
     }
 
-    // ================= CREATE QUERY =======================
     private String createGetProductQuery(ProductSearchRequest request) {
 
         String select =
@@ -233,6 +235,7 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
                                 p.name          as productName,
                                 p.price,
                                 p.sold,
+                                p.quantity,
                                 p.discount,
                                 p.brand,
                                 p.description,
@@ -292,7 +295,6 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
         return select + where + order;
     }
 
-    // ================= SET PARAMS =========================
     private Map<String, Object> setParmSearch(ProductSearchRequest request) {
         Map<String, Object> map = new HashMap<>();
 

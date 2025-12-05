@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.base.BaseResponse;
 import com.example.demo.dto.product.request.ProductCreateForm;
 import com.example.demo.dto.product.request.ProductSearchRequest;
 import com.example.demo.dto.product.response.ProductResponse;
@@ -10,12 +9,13 @@ import com.example.demo.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -32,8 +32,10 @@ public class ProductService {
                     .price(form.getPrice())
                     .sold(0)
                     .discount(form.getDiscount())
+                    .quantity(form.getQuantity())
                     .brand(form.getBrand())
                     .description(form.getDescription())
+                    .createdAt(LocalDateTime.now())
                     .status(1)
                     .build();
 
@@ -50,6 +52,7 @@ public class ProductService {
             product.setPrice(form.getPrice());
             product.setDiscount(form.getDiscount());
             product.setBrand(form.getBrand());
+            product.setQuantity(form.getQuantity());
             product.setDescription(form.getDescription());
             product.setStatus(1);
 
@@ -61,28 +64,33 @@ public class ProductService {
     public void deleteProduct(Long productId) throws Exception {
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new Exception("Không tìm thấy sản phẩm"));
-            product.setStatus(0);
+            product.setStatus(2);
             productRepository.save(product);
     }
 
-    public BaseResponse searchProducts(ProductSearchRequest request) {
-        try {
-            Page<ProductResponse> products = customerProductRepository.getSearchProduct(request);
+//    public BaseResponse searchProducts(ProductSearchRequest request) {
+//        try {
+//            Page<ProductResponse> products = customerProductRepository.getSearchProduct(request);
+//
+//            return new BaseResponse(
+//                    HttpStatus.OK.value(),
+//                    "Tìm kiếm sản phẩm thành công",
+//                    products
+//            );
+//        } catch (Exception e) {
+//            log.error("Error searching products: {}", e.getMessage());
+//            return new BaseResponse(
+//                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                    "Lỗi khi tìm kiếm sản phẩm",
+//                    null
+//            );
+//        }
+//    }
 
-            return new BaseResponse(
-                    HttpStatus.OK.value(),
-                    "Tìm kiếm sản phẩm thành công",
-                    products
-            );
-        } catch (Exception e) {
-            log.error("Error searching products: {}", e.getMessage());
-            return new BaseResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Lỗi khi tìm kiếm sản phẩm",
-                    null
-            );
-        }
+    public Page<ProductResponse> searchProduct(ProductSearchRequest req) throws Exception {
+        return customerProductRepository.getSearchProduct(req);
     }
+
     public ProductResponse findProductDetailByProductId(Long productId) throws Exception {
 
         Product product = productRepository.findById(productId)
@@ -97,6 +105,7 @@ public class ProductService {
                 .name(product.getName())
                 .price(product.getPrice())
                 .sold(product.getSold())
+                .quantity(product.getQuantity())
                 .discount(product.getDiscount())
                 .brand(product.getBrand())
                 .description(product.getDescription())

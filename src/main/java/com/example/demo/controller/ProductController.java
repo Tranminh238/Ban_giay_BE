@@ -3,11 +3,16 @@ package com.example.demo.controller;
 import com.example.demo.dto.base.BaseResponse;
 import com.example.demo.dto.product.request.ProductCreateForm;
 import com.example.demo.dto.product.request.ProductSearchRequest;
+import com.example.demo.dto.product.response.ProductResponse;
+import com.example.demo.entity.Product;
 import com.example.demo.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -47,12 +52,28 @@ public class ProductController {
     }
 
     // ---------------- SEARCH PRODUCT ----------------
-    @PostMapping("/search")
-    public ResponseEntity<BaseResponse> searchProducts(@RequestBody ProductSearchRequest request) {
-        return ResponseEntity.ok(productService.searchProducts(request));
+//    @PostMapping("/search")
+//    public ResponseEntity<BaseResponse> searchProducts(@RequestBody ProductSearchRequest request) {
+//        return ResponseEntity.ok(productService.searchProducts(request));
+//    }
+    @GetMapping("/search")
+    public ResponseEntity<?> search(ProductSearchRequest req) throws Exception {
+
+        Page<ProductResponse> page = productService.searchProduct(req);
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "currentPage", page.getNumber(),
+                        "pageSize", page.getSize(),
+                        "totalItems", page.getTotalElements(),
+                        "totalPages", page.getTotalPages(),
+                        "hasNext", page.hasNext(),
+                        "hasPrevious", page.hasPrevious(),
+                        "items", page.getContent()
+                )
+        );
     }
 
-    // ---------------- GET DETAIL PRODUCT ----------------
     @GetMapping("/detail/{id}")
     public ResponseEntity<BaseResponse> getProductDetail(@PathVariable Long id) {
         try {

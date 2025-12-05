@@ -19,19 +19,11 @@ public class ProductResponse {
     private String name;
     private Integer price;
     private Integer sold;
+    private Integer quantity;
     private Integer discount;
     private String brand;
     private String description;
     private LocalDateTime createdAt;
-
-    private Integer finalPrice; // price after discount
-
-    public Integer getFinalPrice() {
-        if (price != null && discount != null) {
-            return price - (price * discount / 100);
-        }
-        return price;
-    }
 }
 
 

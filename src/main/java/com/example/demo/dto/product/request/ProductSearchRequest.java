@@ -20,10 +20,9 @@ public class ProductSearchRequest {
     private Double minPrice;
     private Double maxPrice;
     private Integer status;
-
     private Integer page = 0;
     private Integer size = 10;
     private List<Integer> brandlist;
-    private String sortBy = "createdAt";
+    private String sortBy = "productId";
     private String sortDirection = "DESC";
 }

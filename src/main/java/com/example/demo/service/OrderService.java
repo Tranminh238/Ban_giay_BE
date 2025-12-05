@@ -1,13 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.order.request.OrderRequest;
-import com.example.demo.dto.order.request.OrderSearchRequest;
-import com.example.demo.dto.order.response.OrderResponse;
-import com.example.demo.entity.Oder;
-import com.example.demo.repository.OrderCustomerRepository;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.Product;
 import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,14 +16,26 @@ import java.time.LocalDateTime;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderCustomerRepository customerRepo;
+    private final ProductRepository productRepository;
 
-    public void createOrder(OrderRequest req) {
-        Oder order = Oder.builder()
+    public Long createOrder(OrderRequest req) {
+        Product product = productRepository.findById(req.getProductId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+
+        if (product.getQuantity() < req.getQuantity()) {
+            throw new RuntimeException("Không đủ số lượng sản phẩm");
+        }
+        if(product.getQuantity() == req.getQuantity()){
+            product.setStatus(0);
+        }
+
+        long totalPrice = ((long) product.getPrice() * product.getDiscount() * req.getQuantity());
+
+        Order order = Order.builder()
                 .productId(req.getProductId())
                 .clientId(req.getClientId())
                 .quantity(req.getQuantity())
-                .price(req.getPrice())
+                .price(totalPrice)
                 .status("pending")
                 .consigneeName(req.getConsigneeName())
                 .consigneePhoneNumber(req.getConsigneePhoneNumber())
@@ -33,7 +44,23 @@ public class OrderService {
                 .build();
 
         orderRepository.save(order);
+        product.setQuantity(product.getQuantity() - req.getQuantity());
+        product.setSold(product.getSold() + req.getQuantity());
+        productRepository.save(product);
+        return order.getId();
     }
 
+    public void payment(boolean isPaid, Long orderId) throws Exception {
+
+        if (isPaid) {
+            Order order = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new Exception("không tìm thấy Order với ID: " + orderId));
+            order.setStatus("paid");
+            order.setCompletedAt(LocalDateTime.now());
+            orderRepository.save(order);
+        } else {
+            throw new Exception("Chưa thanh toán thành công");
+        }
+    }
 
 }

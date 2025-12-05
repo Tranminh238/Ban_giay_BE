@@ -8,7 +8,6 @@ public class OrderRequest {
     private Long clientId;
     private Integer quantity;
     private Long price;
-
     private String consigneeName;
     private String consigneePhoneNumber;
     private String deliveryAddress;

@@ -24,6 +24,7 @@ public class Product {
     private Integer sold;
     private Integer discount;
     private String brand;
+    private Integer quantity;
     private String description;
     private Integer status;
     private LocalDateTime createdAt;
