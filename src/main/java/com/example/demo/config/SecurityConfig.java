@@ -88,7 +88,7 @@ public class SecurityConfig {
                                 "/client/register",
                                 "/product/**",
                                 "order/**",
-                                "/oder/create",
+                                "/order/export",
                                 "/api/public/**"
 
 
