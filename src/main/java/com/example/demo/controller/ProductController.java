@@ -50,29 +50,27 @@ public class ProductController {
             return ResponseEntity.ok(new BaseResponse(500, "Fail: " + e.getMessage(), null));
         }
     }
-
-    // ---------------- SEARCH PRODUCT ----------------
-//    @PostMapping("/search")
-//    public ResponseEntity<BaseResponse> searchProducts(@RequestBody ProductSearchRequest request) {
-//        return ResponseEntity.ok(productService.searchProducts(request));
-//    }
-    @GetMapping("/search")
-    public ResponseEntity<?> search(ProductSearchRequest req) throws Exception {
-
-        Page<ProductResponse> page = productService.searchProduct(req);
-
-        return ResponseEntity.ok(
-                Map.of(
-                        "currentPage", page.getNumber(),
-                        "pageSize", page.getSize(),
-                        "totalItems", page.getTotalElements(),
-                        "totalPages", page.getTotalPages(),
-                        "hasNext", page.hasNext(),
-                        "hasPrevious", page.hasPrevious(),
-                        "items", page.getContent()
-                )
-        );
+    @PostMapping("/search")
+    public ResponseEntity<BaseResponse> searchProducts(@RequestBody ProductSearchRequest request) {
+        return ResponseEntity.ok(productService.searchProducts(request));
     }
+//    @GetMapping("/search")
+//    public ResponseEntity<?> search(ProductSearchRequest req) throws Exception {
+//
+//        Page<ProductResponse> page = productService.searchProduct(req);
+//
+//        return ResponseEntity.ok(
+//                Map.of(
+//                        "currentPage", page.getNumber(),
+//                        "pageSize", page.getSize(),
+//                        "totalItems", page.getTotalElements(),
+//                        "totalPages", page.getTotalPages(),
+//                        "hasNext", page.hasNext(),
+//                        "hasPrevious", page.hasPrevious(),
+//                        "items", page.getContent()
+//                )
+//        );
+//    }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<BaseResponse> getProductDetail(@PathVariable Long id) {

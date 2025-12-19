@@ -37,8 +37,7 @@ public class OrderService {
         if(product.getQuantity() == req.getQuantity()){
             product.setStatus(0);
         }
-
-        long totalPrice = ((long) product.getPrice() * product.getDiscount() * req.getQuantity());
+        long totalPrice = (long) product.getPrice() * product.getDiscount() * req.getQuantity();
 
         Order order = Order.builder()
                 .productId(req.getProductId())

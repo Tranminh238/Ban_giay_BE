@@ -14,6 +14,7 @@ import java.util.List;
 public class ProductSearchRequest {
     private String name;
     private Integer price;
+    private Integer sizes;
     private Integer sold;
     private Integer discount;
     private String brand;

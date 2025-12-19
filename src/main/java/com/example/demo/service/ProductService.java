@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.base.BaseResponse;
 import com.example.demo.dto.product.request.ProductCreateForm;
 import com.example.demo.dto.product.request.ProductSearchRequest;
 import com.example.demo.dto.product.response.ProductResponse;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class ProductService {
             Product product = Product.builder()
                     .name(form.getName())
                     .price(form.getPrice())
+                    .size(form.getSize())
                     .sold(0)
                     .discount(form.getDiscount())
                     .quantity(form.getQuantity())
@@ -50,6 +53,7 @@ public class ProductService {
 
             product.setName(form.getName());
             product.setPrice(form.getPrice());
+            product.setSize(form.getSize());
             product.setDiscount(form.getDiscount());
             product.setBrand(form.getBrand());
             product.setQuantity(form.getQuantity());
@@ -68,28 +72,28 @@ public class ProductService {
             productRepository.save(product);
     }
 
-//    public BaseResponse searchProducts(ProductSearchRequest request) {
-//        try {
-//            Page<ProductResponse> products = customerProductRepository.getSearchProduct(request);
-//
-//            return new BaseResponse(
-//                    HttpStatus.OK.value(),
-//                    "Tìm kiếm sản phẩm thành công",
-//                    products
-//            );
-//        } catch (Exception e) {
-//            log.error("Error searching products: {}", e.getMessage());
-//            return new BaseResponse(
-//                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                    "Lỗi khi tìm kiếm sản phẩm",
-//                    null
-//            );
-//        }
-//    }
+    public BaseResponse searchProducts(ProductSearchRequest request) {
+        try {
+            Page<ProductResponse> products = customerProductRepository.getSearchProduct(request);
 
-    public Page<ProductResponse> searchProduct(ProductSearchRequest req) throws Exception {
-        return customerProductRepository.getSearchProduct(req);
+            return new BaseResponse(
+                    HttpStatus.OK.value(),
+                    "Tìm kiếm sản phẩm thành công",
+                    products
+            );
+        } catch (Exception e) {
+            log.error("Error searching products: {}", e.getMessage());
+            return new BaseResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Lỗi khi tìm kiếm sản phẩm",
+                    null
+            );
+        }
     }
+
+//    public Page<ProductResponse> searchProduct(ProductSearchRequest req) throws Exception {
+//        return customerProductRepository.getSearchProduct(req);
+//    }
 
     public ProductResponse findProductDetailByProductId(Long productId) throws Exception {
 
@@ -104,6 +108,7 @@ public class ProductService {
                 .productId(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
+                .size(product.getSize())
                 .sold(product.getSold())
                 .quantity(product.getQuantity())
                 .discount(product.getDiscount())

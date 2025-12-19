@@ -22,6 +22,7 @@ public class Product {
     private String name;
     private Integer price;
     private Integer sold;
+    private Integer size;
     private Integer discount;
     private String brand;
     private Integer quantity;

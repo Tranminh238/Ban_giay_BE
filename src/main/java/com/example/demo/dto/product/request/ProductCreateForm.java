@@ -11,6 +11,7 @@ public class ProductCreateForm {
     private Long productId;
     private String name;
     private Integer price;
+    private Integer size;
     private Integer discount;
     private String brand;
     private Integer quantity;

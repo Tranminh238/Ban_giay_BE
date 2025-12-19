@@ -18,6 +18,7 @@ public class ProductResponse {
     private Long productId;
     private String name;
     private Integer price;
+    private Integer size;
     private Integer sold;
     private Integer quantity;
     private Integer discount;

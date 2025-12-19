@@ -200,6 +200,9 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
                             .price(rs.getBigDecimal("price") != null
                                     ? rs.getBigDecimal("price").intValue()
                                     : null)
+                            .size(rs.getBigDecimal("size") != null
+                                    ? rs.getBigDecimal("size").intValue()
+                                    : null)
                             .sold(rs.getBigDecimal("sold") != null
                                     ? rs.getBigDecimal("sold").intValue()
                                     : null)
@@ -234,6 +237,7 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
                         select  p.id            as productId,
                                 p.name          as productName,
                                 p.price,
+                                p.size,
                                 p.sold,
                                 p.quantity,
                                 p.discount,
@@ -259,9 +263,11 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
         } else if (Objects.nonNull(request.getMaxPrice())) {
             whereList.add("p.price <= :maxPrice");
         }
-
         if (Objects.nonNull(request.getDiscount())) {
             whereList.add("p.discount = :discount");
+        }
+        if (Objects.nonNull(request.getDiscount())) {
+            whereList.add("p.size = :size");
         }
 
         if (StringUtils.isNotBlank(request.getBrand())) {
