@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -25,6 +26,8 @@ public class ProductResponse {
     private String brand;
     private String description;
     private LocalDateTime createdAt;
+    private List<String> images;
+
 }
 
 

@@ -1,6 +1,7 @@
 package com.example.demo.util;
 
-import com.example.demo.exception.Exception;
+import com.example.demo.exception.ShopException;
+import com.example.demo.exception.ShopException;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class QueryUtil {
     /**
      * Kiểm tra và trả về column name cho sorting (Admin)
      */
-    public static String checkOrderSearchProduct(String order) throws Exception {
+    public static String checkOrderSearchProduct(String order) throws ShopException {
         return switch (order) {
             case "productId" -> "id";  // ✅ Tên cột trong DB
             case "productName" -> "name";
@@ -17,7 +18,7 @@ public class QueryUtil {
             case "latestPrice" -> "price";  // hoặc calculated field
             case "sold" -> "sold";
             case "createAt" -> "created_at";  // ✅ Snake case trong DB
-            default -> throw new Exception("Order query not match: " + order);
+            default -> throw new ShopException("Order query not match: " + order);
         };
     }
 

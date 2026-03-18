@@ -4,7 +4,9 @@ import com.example.demo.dto.base.BaseResponse;
 import com.example.demo.dto.product.request.ProductCreateForm;
 import com.example.demo.dto.product.request.ProductSearchRequest;
 import com.example.demo.dto.product.response.ProductResponse;
+import com.example.demo.entity.Asset;
 import com.example.demo.entity.Product;
+import com.example.demo.repository.AssetRepository;
 import com.example.demo.repository.CustomerProductRepository;
 import com.example.demo.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,6 +28,7 @@ import java.time.LocalDateTime;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final AssetRepository assetRepository;
     private final CustomerProductRepository customerProductRepository;
 
     @Transactional
@@ -43,6 +47,18 @@ public class ProductService {
                     .build();
 
             productRepository.save(product);
+
+        if (form.getImages() != null && !form.getImages().isEmpty()) {
+            List<Asset> assets = form.getImages().stream()
+                    .map(url -> Asset.builder()
+                            .productId(product.getId())
+                            .imageUrl(url)
+                            .createAt(LocalDateTime.now())
+                            .build())
+                    .toList();
+
+            assetRepository.saveAll(assets);
+        }
     }
 
 
@@ -62,6 +78,21 @@ public class ProductService {
 
             productRepository.save(product);
 
+            List<Asset> oldAssets = assetRepository.findByProductId(form.getProductId());
+            assetRepository.deleteAll(oldAssets);
+
+            List<String> images = form.getImages();
+            if (images != null && !images.isEmpty()) {
+                List<Asset> newAssets = images.stream()
+                        .map(url -> Asset.builder()
+                                .productId(product.getId())
+                                .imageUrl(url)
+                                .createAt(LocalDateTime.now())
+                                .build())
+                        .toList();
+
+                assetRepository.saveAll(newAssets);
+            }
     }
 
     @Transactional
@@ -104,6 +135,7 @@ public class ProductService {
 
 
     private ProductResponse convertToResponse(Product product) {
+        List<String> images = assetRepository.findImageUrlProduct(product.getId());
         return ProductResponse.builder()
                 .productId(product.getId())
                 .name(product.getName())
@@ -115,6 +147,7 @@ public class ProductService {
                 .brand(product.getBrand())
                 .description(product.getDescription())
                 .createdAt(product.getCreatedAt())
+                .images(images)
                 .build();
     }
 }

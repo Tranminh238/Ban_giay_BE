@@ -5,7 +5,7 @@ import com.example.demo.dto.client.request.ClientEdditInfoRequest;
 import com.example.demo.dto.client.response.ClientInfoResponse;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.User;
-import com.example.demo.exception.Exception;
+import com.example.demo.exception.ShopException;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -23,12 +23,12 @@ public class ClientService {
     @Transactional
     public void registerClient(RegistRequest registRequest) {
         if(userRepository.findByUsername(registRequest.getUsername()).isPresent()){
-            throw new Exception("User đã tồn tại");
+            throw new ShopException("User đã tồn tại");
         }
         User userEntity = User.builder()
                 .username(registRequest.getUsername())
                 .password(passwordEncoder.encode(registRequest.getPassword()))
-                .role("CLIENT")
+                .role("USER")
                 .build();
         User user = userRepository.save(userEntity);
 
@@ -41,9 +41,9 @@ public class ClientService {
     }
     public void editInfo(ClientEdditInfoRequest request){
         Client client = clientRepository.findById(request.getUserId())
-                .orElseThrow(() -> new Exception("Client not found by id: " + request.getUserId()));
+                .orElseThrow(() -> new ShopException("Client not found by id: " + request.getUserId()));
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new Exception("User not found by id: " + request.getUserId()));
+                .orElseThrow(() -> new ShopException("User not found by id: " + request.getUserId()));
 
         user.setUsername(request.getEmail());
         client.setFullName(request.getFullName());

@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.dto.order.request.OrderRequest;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.Product;
+import com.example.demo.enums.OrderEnum;
+import com.example.demo.exception.ShopException;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -29,10 +31,10 @@ public class OrderService {
 
     public Long createOrder(OrderRequest req) {
         Product product = productRepository.findById(req.getProductId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+                .orElseThrow(() -> new ShopException("Không tìm thấy sản phẩm"));
 
         if (product.getQuantity() < req.getQuantity()) {
-            throw new RuntimeException("Không đủ số lượng sản phẩm");
+            throw new ShopException("Không đủ số lượng sản phẩm");
         }
         if(product.getQuantity() == req.getQuantity()){
             product.setStatus(0);
@@ -44,7 +46,7 @@ public class OrderService {
                 .clientId(req.getClientId())
                 .quantity(req.getQuantity())
                 .price(totalPrice)
-                .status("pending")
+                .status(OrderEnum.Status.WAIT.getValue())
                 .consigneeName(req.getConsigneeName())
                 .consigneePhoneNumber(req.getConsigneePhoneNumber())
                 .deliveryAddress(req.getDeliveryAddress())
@@ -63,7 +65,7 @@ public class OrderService {
         if (isPaid) {
             Order order = orderRepository.findById(orderId)
                     .orElseThrow(() -> new Exception("không tìm thấy Order với ID: " + orderId));
-            order.setStatus("paid");
+            order.setStatus(OrderEnum.Status.PAID.getValue());
             order.setCompletedAt(LocalDateTime.now());
             orderRepository.save(order);
         } else {

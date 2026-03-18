@@ -167,6 +167,7 @@ package com.example.demo.repository;
 
 import com.example.demo.dto.product.request.ProductSearchRequest;
 import com.example.demo.dto.product.response.ProductResponse;
+import com.example.demo.exception.ShopException;
 import com.example.demo.util.PageUtil;
 import com.example.demo.util.QueryUtil;
 import lombok.RequiredArgsConstructor;
@@ -186,10 +187,11 @@ import java.util.*;
 public class CustomerProductRepositoryImpl implements CustomerProductRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final AssetRepository assetRepository;
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public Page<ProductResponse> getSearchProduct(ProductSearchRequest request) throws Exception {
+    public Page<ProductResponse> getSearchProduct(ProductSearchRequest request){
         try {
             List<ProductResponse> productResponses = jdbcTemplate.query(
                     createGetProductQuery(request),
@@ -214,11 +216,10 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
                                     : null)
                             .brand(rs.getString("brand"))
                             .description(rs.getString("description"))
-                            .createdAt(
-                                    rs.getString("createAt") != null
+                            .createdAt(rs.getString("createAt") != null
                                             ? LocalDateTime.parse(rs.getString("createAt"), dateTimeFormatter)
-                                            : null
-                            )
+                                            : null)
+                            .images(assetRepository.findImageUrlProduct(rs.getLong("productId")))
                             .build()
             );
 
@@ -226,7 +227,7 @@ public class CustomerProductRepositoryImpl implements CustomerProductRepository 
 
         } catch (Exception e) {
             log.error("Error searching products: {}", e.getMessage());
-            throw new Exception(e.getMessage());
+            throw new ShopException(e.getMessage());
         }
     }
 

@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.User;
+import com.example.demo.exception.ShopException;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.dto.auth.request.AuthRequest;
 import com.example.demo.dto.auth.response.AuthResponse;
 import com.example.demo.dto.base.BaseResponse;
-import com.example.demo.exception.Exception;
+import com.example.demo.exception.ShopException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class AuthService {
         if(user.isPresent()) {
             boolean checkPassword = passwordEncoder.matches(request.getPassword(), user.get().getPassword());
             if (!checkPassword){
-                throw new Exception("Mật khẩu không đúng!");
+                throw new ShopException("Mật khẩu không đúng!");
             }
             String role = userRepository.findUserRoleByUsername(user.get().getUsername());
 

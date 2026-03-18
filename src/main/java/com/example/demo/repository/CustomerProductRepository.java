@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CustomerProductRepository{
-    Page<ProductResponse> getSearchProduct(ProductSearchRequest request) throws Exception;
+    Page<ProductResponse> getSearchProduct(ProductSearchRequest request);
 }

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderSearch {
+public class OrderSearchAdmin {
     private Long orderId;
     private Long price;
     private Integer quantity;
